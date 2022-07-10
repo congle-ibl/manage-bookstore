@@ -1,20 +1,20 @@
 # Manage Bookstore
 
-## How to run
+## How to run:
 
-1. Open terminal and change your directory to this project
+1. Open terminal and change your directory to this project.
 
-2. Build project: `cabal build`
+2. Build project: `cabal build`.
 
-3. Run project: `cabal run`
+3. Run project: `cabal run`.
 
 ## Features:
 
 This application is to manage a bookstore with basic actions:
-+ Add a new book to the bookstore, a book has 6 attributes: id, title, author, publishing year, price and quantity
-+ Show all books in the bookstore
-+ Edit a book by id
-+ Delete a book by id
++ Add a new book to the bookstore, a book has 6 attributes: id, title, author, publishing year, price and quantity.
++ Show all books in the bookstore.
++ Edit a book by id.
++ Delete a book by id.
 
 The application's menu:
 ```
@@ -82,7 +82,7 @@ Quantity: 100
 ```
 
 3. Edit a book:
-A book can be edited by an id. If it doesn't exist, the application will throw the message: "Cannot find this book!"
+A book can be edited by an id. If it doesn't exist, the application will throw the message: "Cannot find this book!".
 ```
 MENU:
 --------------------
@@ -143,7 +143,7 @@ Quantity: 100
 ```
 
 4. Delete a book:
-A book can be deleted by an id. If it doesn't exist, the application will throw the message: "Cannot find this book!"
+A book can be deleted by an id. If it doesn't exist, the application will throw the message: "Cannot find this book!".
 ```
 MENU:
 --------------------
