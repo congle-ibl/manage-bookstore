@@ -1,24 +1,10 @@
 module Main where
 
 import Book
-import System.IO
 
 main :: IO ()
 main = do
-    -- contents <- readFile "db/books.txt"
-    -- putStrLn contents
-
-    -- handle <- openFile "db/books.txt" ReadMode
-    -- contents <- hGetContents handle
-    -- putStrLn contents
-
-    -- hClose handle
     listBooks <- fmap readListBooksFromDB (readFile "db/books.txt")
-    -- listBooks <- fmap readListBooksFromDB contents
-    -- hClose handle
-    -- putStrLn "debug---list"
-    -- putStrLn (show listBooks)
-    -- putStrLn "debug---list"
     process listBooks
 
 process :: [Book] -> IO ()
@@ -32,37 +18,42 @@ process listBooks = do
                "\n5. Exit" ++
                "\n" ++ replicate 20 '-'
 
-    action <- getInput "\nWhat do you want to do?: "
+    action <- getStringInput "\nWhat do you want to do?: "
 
     case action of
         "1" -> do
-            bookTitle <- getInput "\nBook Title: "
+            bookTitle <- getStringInput "\nTitle: "
+            bookAuthor <- getStringInput "\nAuthor: "
+            publishingYear <- getIntInput "\nPublishing Year: "
+            price <- getFloatInput "\nPrice: "
+            quantity <- getIntInput "\nQuantity: "
 
-            newListBooks <- addNewBook listBooks bookTitle
+            newListBooks <- addNewBook listBooks bookTitle bookAuthor publishingYear price quantity
             writeListBooksToDB newListBooks
 
             process newListBooks
 
         "2" -> do
-            _bookIdStr <- getInput "\nInput your book id to EDIT: "
-            let _bookId = read _bookIdStr
+            _bookId <- getIntInput "\nInput your book id to EDIT: "
 
-            _bookTitle <- getInput "\nInput new title: "
+            _bookTitle <- getStringInput "\nInput new title: "
+            _bookAuthor <- getStringInput "\nInput new author: "
+            _publishingYear <- getIntInput "\nInput new publishing year: "
+            _price <- getFloatInput "\nInput new price: "
+            _quantity <- getIntInput "\nInput new quantity: "
 
-            newListBooks <- editBook listBooks _bookId _bookTitle
+            newListBooks <- editBook listBooks _bookId _bookTitle _bookAuthor _publishingYear _price _quantity
             writeListBooksToDB newListBooks
 
             process newListBooks
 
         "3" -> do
-            _bookIdStr <- getInput "\nInput your book id to DELETE: "
-            let _bookId = read _bookIdStr
+            _bookId <- getIntInput "\nInput your book id to DELETE: "
 
             newListBooks <- deleteBook listBooks _bookId
             writeListBooksToDB newListBooks
 
             process newListBooks
-            -- process listBooks
 
         "4" -> do
             putStrLn "\nALL BOOKS:"
