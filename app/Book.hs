@@ -11,7 +11,7 @@ data Book = Book { bookId :: Int
                  , publishingYear :: Int
                  , price :: Float
                  , quantity :: Int
-                 } | UnknownBook deriving (Show, Eq)
+                 } deriving (Show, Eq)
 
 addNewBook :: [Book] -> String -> String -> Int -> Float -> Int -> IO [Book]
 addNewBook listBooks _bookTitle _bookAuthor _publishingYear _price _quantity = do
@@ -27,21 +27,25 @@ addNewBook listBooks _bookTitle _bookAuthor _publishingYear _price _quantity = d
     let newListBooks = listBooks ++ [newBook]
     return newListBooks
 
-editBook :: [Book] -> Int -> String -> String -> Int -> Float -> Int -> IO [Book]
-editBook listBooks _bookId _bookTitle _bookAuthor _publishingYear _price _quantity = do
+editBook :: [Book] -> Int -> IO [Book]
+editBook listBooks _bookId = do
     let bookToEdit = find (\book -> (bookId book) == _bookId) listBooks
-    if (unwrapItem bookToEdit) == UnknownBook
+    if bookToEdit == Nothing
         then do
             putStrLn "\nCannot find this book!"
             return listBooks
         else do
+            _bookTitle <- getStringInput "\nInput new title: "
+            _bookAuthor <- getStringInput "\nInput new author: "
+            _publishingYear <- getIntInput "\nInput new publishing year: "
+            _price <- getFloatInput "\nInput new price: "
+            _quantity <- getIntInput "\nInput new quantity: "
             let newListBooks = replaceItem listBooks (unwrapItem bookToEdit) _bookTitle _bookAuthor _publishingYear _price _quantity
             putStrLn "\nEdited!"
             return newListBooks
 
 unwrapItem :: Maybe Book -> Book
 unwrapItem (Just a) = a
-unwrapItem Nothing = UnknownBook
 
 replaceItem :: [Book] -> Book -> String -> String -> Int -> Float -> Int -> [Book]
 replaceItem [] bookToEdit _bookTitle _bookAuthor _publishingYear _price _quantity = []
@@ -72,7 +76,7 @@ replaceItem (book:otherBooks) bookToEdit _bookTitle _bookAuthor _publishingYear 
 deleteBook :: [Book] -> Int -> IO [Book]
 deleteBook listBooks _bookId = do
     let bookToDelete = find (\book -> (bookId book) == _bookId) listBooks
-    if (unwrapItem bookToDelete) == UnknownBook
+    if bookToDelete == Nothing
         then do
             putStrLn "\nCannot find this book!"
             return listBooks
@@ -89,7 +93,7 @@ removeItem (book:otherBooks) bookToDelete
 
 writeListBooksToDB :: [Book] -> IO ()
 writeListBooksToDB listBooks = do
-    let str = init $ convertListBooksToString listBooks
+    let str = convertListBooksToString listBooks
     writeFile "db/temp.txt" str
     removeFile "db/books.txt"
     renameFile "db/temp.txt" "db/books.txt"
@@ -105,7 +109,7 @@ convertListBooksToString (book:otherBooks) = show (bookId book) ++ " " ++
                                              convertListBooksToString otherBooks
 
 readListBooksFromDB :: String -> [Book]
-readListBooksFromDB rawContent = map readBook (lines rawContent)
+readListBooksFromDB str = map readBook (lines str)
 
 readBook :: String -> Book
 readBook item = case words item of
@@ -117,8 +121,6 @@ readBook item = case words item of
              , price = read _price
              , quantity = read _quantity
              }
-    _ -> UnknownBook
-
 
 showListBooks :: [Book] -> String
 showListBooks [] = ""

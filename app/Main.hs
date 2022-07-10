@@ -36,13 +36,7 @@ process listBooks = do
         "2" -> do
             _bookId <- getIntInput "\nInput your book id to EDIT: "
 
-            _bookTitle <- getStringInput "\nInput new title: "
-            _bookAuthor <- getStringInput "\nInput new author: "
-            _publishingYear <- getIntInput "\nInput new publishing year: "
-            _price <- getFloatInput "\nInput new price: "
-            _quantity <- getIntInput "\nInput new quantity: "
-
-            newListBooks <- editBook listBooks _bookId _bookTitle _bookAuthor _publishingYear _price _quantity
+            newListBooks <- editBook listBooks _bookId
             writeListBooksToDB newListBooks
 
             process newListBooks
